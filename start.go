@@ -7,6 +7,7 @@ import (
 )
 func main() {
 	fmt.Println("Start!")
+	defer fmt.Println("[!]Stoped[!]")
 	r := router.New()
 	a := news.New()
 

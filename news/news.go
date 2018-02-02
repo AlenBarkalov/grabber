@@ -1,5 +1,7 @@
 package news
 
+
+// инициализация каналов
 var (
 	collect		chan (string)
 
@@ -21,27 +23,27 @@ func init()  {
 	result = make(chan ([]Topic))
 }
 
+// взаимодействие
 func Collect(category string){
-	collect <- category
+	collect <- category 						// строку передаём в канал
 
 }
 
-func Result(category string) []Topic {
+func Result(category string) []Topic {   		// заблокировано пока не будет получено каких-нибудь данных
 	request <- category
-	//topics <- result
-	return <- result
+	//topics <- result							// можно так, а можно сократить и указать как ниже...
+	return <- result 							// ожидаем для передачи пользователю
 	//return nil
 }
 
+
 func (a Archive) Serve()  {
-	for {
-		select {
-		case category := <-collect:
-			a.collect(category)
-		case category := <- request:
+	for {										// запуск бесконечного цикла
+		select {								// работа с каналами
+		case category := <-collect:				// получили новые данные в collect
+			a.collect(category)					//
+		case category := <- request:			//
 			result <- a.result(category)
-		//case <-reset:
-		//	a.resetData()
 		}
 	}
 
